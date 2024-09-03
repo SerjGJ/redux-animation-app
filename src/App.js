@@ -1,25 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { addElement, removeElement } from './features/elementsSlice'
+import { motion, AnimatePresence } from 'framer-motion'
+import './App.css'
 
 function App() {
+  const dispatch = useDispatch()
+  const elements = useSelector((state) => state.elements)
+
+  const handleAdd = () => {
+    dispatch(addElement())
+  }
+
+  const handleRemove = () => {
+    dispatch(removeElement())
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <button onClick={handleAdd}>Добавить</button>
+      <button onClick={handleRemove}>Удалить</button>
+      <div className="element-list">
+        <AnimatePresence initial={false}>
+          {elements.map((element, index) => (
+            <motion.div
+              key={element.id}
+              className="element"
+              style={{ backgroundColor: element.color }}
+              initial={{ x: '-100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            />
+          ))}
+        </AnimatePresence>
+      </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
